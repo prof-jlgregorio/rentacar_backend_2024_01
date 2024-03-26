@@ -14,7 +14,7 @@ public class BrandService {
     @Autowired
     private BrandRepository repository;
 
-    public BrandModel save(BrandModel model){
+    public BrandModel create(BrandModel model){
         return repository.save(model);
     }
 
@@ -25,6 +25,20 @@ public class BrandService {
 
     public List<BrandModel> findByName(String name){
         return repository.findByNameContainsIgnoreCaseOrderByName(name);
+    }
+
+    public List<BrandModel> findAll(){
+        return repository.findAll();
+    }
+
+    public BrandModel update(BrandModel model){
+        return repository.save(model);
+    }
+
+    public void delete(int id){
+        var found = repository.findById(id).orElseThrow(
+                ()-> new ResourceNotFoundException("Não Encontrado"));
+        repository.delete(found);
     }
 
 }
