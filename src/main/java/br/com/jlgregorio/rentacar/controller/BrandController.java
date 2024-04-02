@@ -1,5 +1,6 @@
 package br.com.jlgregorio.rentacar.controller;
 
+import br.com.jlgregorio.rentacar.dto.BrandDto;
 import br.com.jlgregorio.rentacar.model.BrandModel;
 import br.com.jlgregorio.rentacar.service.BrandService;
 import jakarta.websocket.server.PathParam;
@@ -11,35 +12,44 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/brands")
+@RequestMapping("/api/brands")
 public class BrandController {
 
     @Autowired
     private BrandService service;
 
+//    @PostMapping
+//    public BrandModel create(@RequestBody BrandModel model){
+//        return service.create(model);
+//    }
+
     @PostMapping
-    public BrandModel create(@RequestBody BrandModel model){
-        return service.create(model);
+    public BrandDto create(@RequestBody BrandDto dto){
+        return service.create(dto);
     }
 
+//    @GetMapping("/{id}")
+//    public BrandModel findById(@PathVariable("id") int id){
+//        return service.findById(id);
+//    }
     @GetMapping("/{id}")
-    public BrandModel findById(@PathVariable("id") int id){
+    public BrandDto findById(@PathVariable("id") int id){
         return service.findById(id);
     }
 
     @GetMapping("/find/{name}")
-    public List<BrandModel> findByName(@PathVariable("name") String name){
+    public List<BrandDto> findByName(@PathVariable("name") String name){
         return service.findByName(name);
     }
 
     @GetMapping
-    public List<BrandModel> findAll(){
+    public List<BrandDto> findAll(){
         return service.findAll();
     }
 
     @PutMapping
-    public BrandModel update(@RequestBody BrandModel model){
-        return service.update(model);
+    public BrandDto update(@RequestBody BrandDto dto){
+        return service.update(dto);
     }
 
     @DeleteMapping("/{id}")
