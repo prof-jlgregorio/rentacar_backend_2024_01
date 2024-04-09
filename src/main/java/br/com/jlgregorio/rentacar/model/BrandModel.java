@@ -13,7 +13,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "brands")
 public class BrandModel {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -23,6 +22,4 @@ public class BrandModel {
 
     @Column(nullable = false, length = 50)
     private String country;
-
-
 }

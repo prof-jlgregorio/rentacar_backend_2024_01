@@ -14,15 +14,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/brands")
 public class BrandController {
-
     @Autowired
     private BrandService service;
-
-//    @PostMapping
-//    public BrandModel create(@RequestBody BrandModel model){
-//        return service.create(model);
-//    }
-
     @PostMapping
     public BrandDto create(@RequestBody BrandDto dto){
         return service.create(dto);
