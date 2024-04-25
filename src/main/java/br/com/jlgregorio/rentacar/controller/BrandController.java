@@ -5,6 +5,9 @@ import br.com.jlgregorio.rentacar.model.BrandModel;
 import br.com.jlgregorio.rentacar.service.BrandService;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +30,9 @@ public class BrandController {
 //    }
     @GetMapping("/{id}")
     public BrandDto findById(@PathVariable("id") int id){
-        return service.findById(id);
+        BrandDto dto = service.findById(id);
+        createLinks(dto);
+        return dto;
     }
 
     @GetMapping("/find/{name}")
@@ -36,8 +41,13 @@ public class BrandController {
     }
 
     @GetMapping
-    public List<BrandDto> findAll(){
-        return service.findAll();
+    public CollectionModel<BrandDto> findAll(){
+        CollectionModel<BrandDto> brands = CollectionModel.of(service.findAll());
+        for (BrandDto brand: brands){
+            createLinks(brand);
+        }
+        createCollectionLink(brands);
+        return brands;
     }
 
     @PutMapping
@@ -50,5 +60,33 @@ public class BrandController {
         service.delete(id);
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
+
+//    create the HATEOAS links
+    private void createLinks(BrandDto dto){
+//        add the self link
+        dto.add(
+                WebMvcLinkBuilder.linkTo(
+                        WebMvcLinkBuilder.methodOn(
+                                this.getClass()).findById(dto.getId())
+                        ).withSelfRel()
+                );
+//        add the create link
+        dto.add(
+                WebMvcLinkBuilder.linkTo(
+                        WebMvcLinkBuilder.methodOn(
+                                this.getClass()).delete(dto.getId())
+                        ).withRel("delete")
+                );
+    }
+//create the link to collection
+    private void createCollectionLink(CollectionModel<BrandDto> brands){
+        brands.add(
+                WebMvcLinkBuilder.linkTo(
+                        WebMvcLinkBuilder.methodOn(
+                                this.getClass()).findAll()
+                ).withRel(IanaLinkRelations.COLLECTION)
+        );
+    }
+
 
 }
